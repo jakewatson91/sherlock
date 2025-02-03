@@ -1,0 +1,72 @@
+/* Reset default browser styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Header Styles */
+header {
+  background: #333;
+  padding: 1em 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 100;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+nav li {
+  margin: 0 1em;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Main Content Padding to Offset Fixed Header */
+main {
+  padding-top: 70px;
+}
+
+/* Section Styles */
+section {
+  padding: 4em 1em;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+#hero {
+  text-align: center;
+  background: #f4f4f4;
+}
+
+.project {
+  margin-bottom: 2em;
+}
+
+.project img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 1em;
+  background: #333;
+  color: #fff;
+}
