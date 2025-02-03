@@ -1,20 +1,24 @@
 body {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   padding: 0;
   margin: 0;
   background-color: #f9f9f9;
+  font-size: 18px; /* Increase readability */
+  line-height: 1.8;
+  color: #333; /* Slightly softer color for better legibility */
 }
 
 .container {
-  max-width: 800px;
+  max-width: 300px;
   margin: 0 auto;
-  padding: 20px;
-  background-color: #ffffff;
+  padding: 100px;
+  background-color: #f9f9f9;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2, h3 {
   font-weight: 600;
+  color: #222; /* Slight contrast for headings */
 }
 
 p {
@@ -43,5 +47,5 @@ nav a {
 
 /* Add left padding to the text sections */
 .content {
-  padding-left: 20px;
+  padding-left: 100px;
 }
