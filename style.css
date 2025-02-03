@@ -40,17 +40,19 @@ nav a {
 /* Main Content Padding to Offset Fixed Header */
 main {
   padding-top: 70px;
+  /* Adding left padding */
+  padding-left: 20px;
 }
 
 /* Section Styles */
 section {
-  padding: 4em 1em;
+  padding: 4em 1em 4em 20px; /* top, right, bottom, left */
   max-width: 960px;
   margin: 0 auto;
 }
 
 #hero {
-  text-align: center;
+  text-align: left; /* Align text to left to match the padding */
   background: #f4f4f4;
 }
 
