@@ -7,3 +7,4 @@ langchain-community
 python-dotenv
 pypdf
 faiss-cpu
+"unstructured[all]"
