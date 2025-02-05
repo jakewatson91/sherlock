@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jake Watson</title>
+    <title>Personal Website</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <button id="theme-toggle" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+        <label class="toggle-wrapper" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle">
+            <span class="toggle-slider"></span>
+        </label>
     </header>
 
     <main class="content-wrapper">
@@ -27,13 +30,6 @@
                     Dario earned his doctorate degree in biophysics from Princeton University as a Hertz Fellow, 
                     and was a postdoctoral scholar at the Stanford University School of Medicine.
                 </p>
-            </section>
-
-            <section>
-                <h3>Short posts</h3>
-                <ul>
-                    <!-- Add list items here -->
-                </ul>
             </section>
         </article>
     </main>

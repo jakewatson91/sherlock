@@ -3,7 +3,7 @@
   --text-color: #141413;
   --font-size-base: 20px;
   --content-max-width: 620px;
-  --content-padding: 0 20px;
+  --content-padding: 96px 20px; /* 1 inch padding on top and left */
 }
 
 body {
@@ -41,32 +41,43 @@ a:hover {
   text-decoration: underline;
 }
 
-h3 {
-  color: var(--text-color);
-  font-size: 24px;
-  margin-top: 40px;
-}
-
-ul {
-  list-style: disc;
-  padding-left: 40px;
-}
-
 p {
   margin-bottom: 20px;
 }
 
-#theme-toggle {
-  background-color: var(--text-color);
-  color: var(--bg-color);
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  margin: 20px;
+/* Dark mode toggle styling */
+.toggle-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px;
 }
 
-#theme-toggle:hover {
-  opacity: 0.8;
+.toggle-slider {
+  position: relative;
+  width: 50px;
+  height: 26px;
+  background-color: #ccc;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+#theme-toggle:checked + .toggle-slider {
+  background-color: #0073e6;
+}
+
+#theme-toggle:checked + .toggle-slider::before {
+  transform: translateX(24px);
 }
