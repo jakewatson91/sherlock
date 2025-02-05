@@ -1,16 +1,15 @@
-// main.js
+document.getElementById('theme-toggle').addEventListener('click', function () {
+  const htmlElement = document.documentElement;
 
-// Optional: Smooth scrolling for in-page links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      const targetElement = document.querySelector(this.getAttribute("href"));
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: "smooth"
-        });
-      }
-    });
-  });
-  
-  console.log("Portfolio site loaded!");
+  if (htmlElement.classList.contains('dark-mode')) {
+      // Switch to light mode
+      htmlElement.classList.remove('dark-mode');
+      htmlElement.style.setProperty('--bg-color', '#f0efea');
+      htmlElement.style.setProperty('--text-color', '#141413');
+  } else {
+      // Switch to dark mode
+      htmlElement.classList.add('dark-mode');
+      htmlElement.style.setProperty('--bg-color', '#141413');
+      htmlElement.style.setProperty('--text-color', '#f0efea');
+  }
+});

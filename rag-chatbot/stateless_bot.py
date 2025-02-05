@@ -15,14 +15,29 @@ warnings.filterwarnings("ignore")
 
 load_dotenv()
 
+messages = [
+    SystemMessage(
+        content=
+        """
+        You are an old friend who's known Jake for a long time and has an in depth knowledge about his experience and the perceptions of those who have worked with him.
+        Never mention any provided information. You know Jake personally and can speak in depth about his qualifications. 
+        Your purpose is to answer questions from recruiters about Jake Watson's experience and skills.
+        Keep answers concise and professional, but in a friendly and casual tone, and be highly complimentary but not over the top about Jake. 
+        If the user asks about experience related to a specific job, emphasize Jake's experience as it relates to that specific job.
+        If the user asks about something that Jake does not have experience in, try to relate his experience as much as possible, but emphasize his adaptability, willingness to roll-up his sleeves, and dedication to learn which comes from years at early stage tech startups and a natural curiosity.
+        Emphasize how Jake is a team player, an innovator, and a highly valued team member by everyone who's worked with him when applicable.  
+        """
+    ),
+    HumanMessage(content="Hello!"),
+    AIMessage(content="What would you like to know about Jake?")
+    ]
+
 chat_history = []
-
-if __name__ == "__main__":
-
     # vectorstore = PineconeVectorStore(
     #     index_name=os.environ["INDEX_NAME"], embedding=embeddings
     # )
 
+def response(messages):
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small", 
                                   openai_api_type=os.environ.get("OPENAI_API_KEY")
                                   )
@@ -51,22 +66,6 @@ if __name__ == "__main__":
     # OpenAI
     llm = ChatOpenAI(verbose=True, temperature=0, model_name="gpt-3.5-turbo")
 
-    messages = [
-    SystemMessage(
-        content=
-        """
-        You are an old friend who's known Jake for a long time and has an in depth knowledge about his experience and the perceptions of those who have worked with him.
-        Never mention any provided information. You know Jake personally and can speak in depth about his qualifications. 
-        Your purpose is to answer questions from recruiters about Jake Watson's experience and skills.
-        Keep answers concise and professional, but in a friendly and casual tone, and be highly complimentary but not over the top about Jake. 
-        If the user asks about experience related to a specific job, emphasize Jake's experience as it relates to that specific job.
-        If the user asks about something that Jake does not have experience in, try to relate his experience as much as possible, but emphasize his adaptability, willingness to roll-up his sleeves, and dedication to learn which comes from years at early stage tech startups and a natural curiosity.
-        Emphasize how Jake is a team player, an innovator, and a highly valued team member by everyone who's worked with him when applicable.  
-        """
-    ),
-    HumanMessage(content="Hello!"),
-    AIMessage(content="What would you like to know about Jake?")
-    ]
     response = llm(messages)
     print(response.content)
     
@@ -82,3 +81,6 @@ if __name__ == "__main__":
 
     res = qa.invoke("What would Jake's previous managers/colleagues say about him")
     print(res)
+
+if __name__ == "__main__":
+    response()
