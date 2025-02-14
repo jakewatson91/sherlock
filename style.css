@@ -1,7 +1,12 @@
 :root {
-  --bg-color: beige; /* Ensuring beige background */
+  --bg-color: beige;
   --text-color: #141413;
   --font-size-base: 20px;
+}
+
+/* Apply box-sizing to everything */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
@@ -16,25 +21,19 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Makes sure content is vertically centered */
+  min-height: 100vh;
 }
 
 .content-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  min-height: 100vh; /* Ensures centering even with small content */
-  padding: 40px 20px; /* Padding for extra breathing space */
-  box-sizing: border-box;
+  padding: 40px 20px;
 }
 
 .content-container {
-  max-width: 620px; /* Keeps text readable */
-  width: 100%;
-  padding: 40px; /* Ensures text is not at the edge */
-  background: white; /* Adds contrast to text */
-  border-radius: 8px; /* Soft edges */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow to lift the content */
-  box-sizing: border-box; /* Ensures padding doesn't overflow */
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
