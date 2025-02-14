@@ -1,7 +1,6 @@
-from stateless_bot import response, messages
+from stateless_bot import response
 import gradio as gr
 
-# Custom CSS for a fancy look
 custom_css = """
 #main-container {
     background-color: #fcf1db;
@@ -40,31 +39,33 @@ custom_css = """
     color: #333;
 }
 """
+
 def cancel_inference():
     global stop_inference
     stop_inference = True
-    
+
 # Define the interface
 with gr.Blocks(css=custom_css) as demo:
     gr.Markdown("<h1 style='text-align: center;'>Jake's experience Q&A</h1>")
     # gr.Markdown("")
 
     # Define a persistent state for the system message
-    system_message_state = gr.State(value=messages[0]) 
+    # system_message_state = gr.State(value=messages[0]) 
 
     # Parameters for model control
-    temperature = gr.Slider(minimum=0.1, maximum=4.0, value=0.7, step=0.1, label="Temperature") # change to something like intensity: https://www.gradio.app/guides/quickstart
+    # temperature = gr.Slider(minimum=0.0, maximum=4.0, value=0.7, step=0.1, label="Temperature") # change to something like intensity: https://www.gradio.app/guides/quickstart
 
     # Chat components
     chat_history = gr.Chatbot(label="Chat")
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
+    output = gr.Textbox()
     cancel_button = gr.Button("Cancel Inference", variant="danger")
 
-    # Pass the `system_message_state` to the `respond` function
-    user_input.submit(respond, [user_input, chat_history, system_message_state, max_tokens, temperature, top_p, use_local_model], chat_history)
+    # Pass the `system_message_state` to the `response` function
+    user_input.submit(response, inputs=[user_input, chat_history, system_message], outputs=output)
 
     cancel_button.click(cancel_inference)
 
 if __name__ == "__main__":
-    demo.launch(share=False)  # Remove share=True because it's not supported on HF Spaces
+    demo.launch(share=True)  # Remove share=True because it's not supported on HF Spaces
 

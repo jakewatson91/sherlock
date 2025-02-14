@@ -21,7 +21,7 @@ if __name__ == "__main__":
     documents = loader.load()
     
     # split entire documents into chunks  
-    text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=25, separator='') # separator is required or else it splits by page
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100, separator='') # separator is required or else it splits by page
     texts = text_splitter.split_documents(documents)
 
     text_embeddings = embeddings.embed_documents([text.page_content for text in texts])
