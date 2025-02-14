@@ -62,10 +62,10 @@ with gr.Blocks(css=custom_css) as demo:
     cancel_button = gr.Button("Cancel Inference", variant="danger")
 
     # Pass the `system_message_state` to the `response` function
-    user_input.submit(response, inputs=[user_input, chat_history, system_message], outputs=output)
+    user_input.submit(response, inputs=[user_input, chat_history], outputs=output)
 
     cancel_button.click(cancel_inference)
 
 if __name__ == "__main__":
-    demo.launch(share=True)  # Remove share=True because it's not supported on HF Spaces
+    demo.launch(share=False)  # Remove share=True because it's not supported on HF Spaces
 

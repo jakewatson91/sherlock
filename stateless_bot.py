@@ -6,6 +6,9 @@ import numpy as np
 from huggingface_hub import InferenceClient
 from langchain_openai import OpenAIEmbeddings
 from langchain.chains.retrieval_qa.base import RetrievalQA
+from langchain.chains.retrieval import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_community.vectorstores import FAISS
 from langchain_community.chat_models import ChatOpenAI
@@ -27,6 +30,7 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-small",
                                 )
 # Create and index the document
 vectorstore = FAISS.from_embeddings(embedding_pairs, embeddings)
+retriever = vectorstore.as_retriever()
 
 # Deepseek V3
 # llm = ChatOpenAI(
@@ -59,31 +63,23 @@ def load_sys_message(file_path="system_message.txt"):
 #     index_name=os.environ["INDEX_NAME"], embedding=embeddings
 # )
 system_message = load_sys_message()
-messages = [
-    SystemMessage(
-        content=system_message    
-    ),
-    HumanMessage(content="What's your purpose?"),
-    AIMessage(content="What would you like to know about Jake?")
-    ]
 
-greeting = llm.invoke(messages)
-# print("Greeting: ", greeting)
+chat_history = []
+def response(model=llm, user_input=test_msg, chat_history=chat_history):
+    
+    prompt = ChatPromptTemplate.from_messages([
+    ("system", f"{system_message}. Your name is Sherlock." "Context: {context}"),
+    ("human", f"{user_input}")
+])
+    qa_chain = create_stuff_documents_chain(model, prompt)
+    chain = create_retrieval_chain(retriever, qa_chain)    
 
-def response(model=llm, user_input=test_msg):
-    if model == llm:
-        qa = RetrievalQA.from_chain_type(
-            llm=llm, chain_type="stuff", retriever=vectorstore.as_retriever()
-        )
+    response = chain.invoke({"input": user_input, "chat_history": chat_history})
+    print(f"Response: {response}")
 
-        response = qa.run(user_input)
-        print(f"Response: {response}")
-    # else:
-    #     response = client.text_generation(user_input)
-    #     print(response)
-    #     return response[0]['generated_text']
-
+    history = (user_input, response["answer"])
+    chat_history.append(history)
     return response
 
 if __name__ == "__main__":
-    response(model=llm)
+    response()
