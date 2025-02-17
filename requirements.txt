@@ -4,8 +4,9 @@ pinecone-client
 langchain-pinecone
 langchain-openai
 langchain-community
+langchain-huggingface
+langchain-deepseek
 python-dotenv
 pypdf
 faiss-cpu
-langchain-deepseek
 gradio==5.16.0
