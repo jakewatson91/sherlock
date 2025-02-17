@@ -26,7 +26,7 @@ with open('data/embedding_pairs.pkl', 'rb') as f:
     embedding_pairs = pickle.load(f)
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small", 
-                                openai_api_type=os.environ.get("OPENAI_API_KEY")
+                                openai_api_key=os.environ.get("OPENAI_API_KEY")
                                 )
 # Create and index the document
 vectorstore = FAISS.from_embeddings(embedding_pairs, embeddings)

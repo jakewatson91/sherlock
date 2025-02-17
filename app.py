@@ -62,7 +62,7 @@ with gr.Blocks(css=custom_css) as demo:
     cancel_button = gr.Button("Cancel Inference", variant="danger")
 
     # Pass the `system_message_state` to the `response` function
-    user_input.submit(response, inputs=[user_input, chat_history], outputs=output)
+    user_input.submit(response, inputs=[user_input, chat_history], outputs=chat_history)
 
     cancel_button.click(cancel_inference)
 
