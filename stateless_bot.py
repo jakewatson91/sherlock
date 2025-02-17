@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import pickle
 import numpy as np
 from huggingface_hub import InferenceClient
+from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain_openai import OpenAIEmbeddings
 from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain.chains.retrieval import create_retrieval_chain
@@ -20,13 +21,6 @@ warnings.filterwarnings("ignore")
 
 load_dotenv()
 test_msg = "Give me a quick summary of Jake's experience"
-
-print("CWD: ", os.curdir)
-print("Files in current directory:", os.listdir())
-if os.path.exists("data"):
-    print("Files in data/:", os.listdir("data"))
-else:
-    print("data/ folder NOT found!")
 
 # Convert document embedding to NumPy arra
 with open('data/embedding_pairs.pkl', 'rb') as f:
@@ -46,17 +40,25 @@ retriever = vectorstore.as_retriever()
 #     openai_api_base='https://api.deepseek.com',
 #     max_tokens=1024
 # )
+# Deepseek V3 HF
+model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-V3-Base',
+                            task="text-generation",
+                    #  model_kwargs={"temperature": 0.1, "max_length": 2048, "do_sample": True},
+                     huggingfacehub_api_token=os.getenv('HF_API_KEY')
+    )
+llm = ChatHuggingFace(llm=model)
 
-# Deepseek R1 Distilled
-# llm = HuggingFaceHub(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+# Deepseek R1 Distilled - doesn't output properly formatted response
+# model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
 #                     #  model_kwargs={"temperature": 0.1, "max_length": 2048, "do_sample": True},
 #                      huggingfacehub_api_token=os.getenv('HF_API_KEY')
 #     )
+# llm = ChatHuggingFace(llm=model)
 
-# Cohere
-llm = HuggingFaceHub(repo_id="CohereForAI/c4ai-command-r-v01",
-                     huggingfacehub_api_token=os.getenv('HF_API_KEY')
-    )
+# Cohere - doesn't output properly formatted response - can't load locally
+# model = HuggingFaceEndpoint(repo_id="CohereForAI/c4ai-command-r-v01",
+#                      huggingfacehub_api_token=os.getenv('HF_API_KEY'))                  
+# llm = ChatHuggingFace(llm=model)
 
 # # OpenAI
 # llm = ChatOpenAI(verbose=True, temperature=0, model_name="gpt-3.5-turbo")
@@ -74,19 +76,24 @@ system_message = load_sys_message()
 chat_history = []
 def response(model=llm, user_input=test_msg, chat_history=chat_history):
     
-    prompt = ChatPromptTemplate.from_messages([
-    ("system", f"{system_message}. Your name is Sherlock." "Context: {context}"),
-    ("human", f"{user_input}")
-])
+    prompt = ChatPromptTemplate([
+    ("system", "{system_message} Your name is Sherlock. {context}"),
+    ("human", "{input}"),
+    ])
+    # print(prompt)
     qa_chain = create_stuff_documents_chain(model, prompt)
     chain = create_retrieval_chain(retriever, qa_chain)    
 
-    response = chain.invoke({"input": user_input, "chat_history": chat_history})
-    print(f"Response: {response}")
+    response = chain.invoke({"system_message": system_message, "input": user_input, "context": chat_history})
+    # print(f"Response: {response['input']}")
+    # print(f"Response Context: {response['context']}")
+    # print(response.keys())
+    print(f"Response Answer: {response['answer']}")
 
     history = (user_input, response["answer"])
     chat_history.append(history)
-    return response
+    print(f"Chat history: {chat_history}")
+    # yield response, chat_history
 
 if __name__ == "__main__":
     response()
