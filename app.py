@@ -46,7 +46,7 @@ def cancel_inference():
 
 # Define the interface
 with gr.Blocks(css=custom_css) as demo:
-    gr.Markdown("<h1 style='text-align: center;'>Jake's experience Q&A</h1>")
+    gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake's experience</h1>")
     # gr.Markdown("")
 
     # Define a persistent state for the system message
