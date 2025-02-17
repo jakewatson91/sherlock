@@ -21,6 +21,13 @@ warnings.filterwarnings("ignore")
 load_dotenv()
 test_msg = "Give me a quick summary of Jake's experience"
 
+print("CWD: ", os.curdir)
+print("Files in current directory:", os.listdir())
+if os.path.exists("data"):
+    print("Files in data/:", os.listdir("data"))
+else:
+    print("data/ folder NOT found!")
+
 # Convert document embedding to NumPy arra
 with open('data/embedding_pairs.pkl', 'rb') as f:
     embedding_pairs = pickle.load(f)
