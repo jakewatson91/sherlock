@@ -26,7 +26,7 @@ with open('data/embedding_pairs.pkl', 'rb') as f:
     embedding_pairs = pickle.load(f)
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small", 
-                                openai_api_key=os.environ.get("OPENAI_API_KEY")
+                                openai_api_key=os.getenv("OPENAI_API_KEY")
                                 )
 # Create and index the document
 vectorstore = FAISS.from_embeddings(embedding_pairs, embeddings)
@@ -35,7 +35,7 @@ retriever = vectorstore.as_retriever()
 # Deepseek V3
 # llm = ChatOpenAI(
 #     model_name='deepseek-chat', 
-#     openai_api_key=os.environ.get('DEEPSEEK_API_KEY'), 
+#     openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
 #     openai_api_base='https://api.deepseek.com',
 #     max_tokens=1024
 # )
@@ -43,12 +43,12 @@ retriever = vectorstore.as_retriever()
 # Deepseek R1 Distilled
 # llm = HuggingFaceHub(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
 #                     #  model_kwargs={"temperature": 0.1, "max_length": 2048, "do_sample": True},
-#                      huggingfacehub_api_token=os.environ.get('HF_API_KEY')
+#                      huggingfacehub_api_token=os.getenv('HF_API_KEY')
 #     )
 
 # Cohere
 llm = HuggingFaceHub(repo_id="CohereForAI/c4ai-command-r-v01",
-                     huggingfacehub_api_token=os.environ.get('HF_API_KEY')
+                     huggingfacehub_api_token=os.getenv('HF_API_KEY')
     )
 
 # # OpenAI
