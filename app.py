@@ -101,7 +101,7 @@ theme = gr.themes.Soft(
 # Define the interface
 with gr.Blocks(theme=theme) as demo:
     gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake</h1>")
-    gr.Radio(["Deepseek V3"], label="Model", info="Model used for inference"),
+    gr.Radio(["Deepseek V3"], label="Model", info="Model used for inference", value=True),
 
     # gr.Markdown("")
 
