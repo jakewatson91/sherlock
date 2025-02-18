@@ -38,7 +38,7 @@ llm = ChatOpenAI(
     model_name='deepseek-chat', 
     openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
     openai_api_base='https://api.deepseek.com',
-    max_tokens=512
+    max_tokens=256
 )
 
 # Deepseek R1 Distilled
