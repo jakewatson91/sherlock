@@ -34,12 +34,12 @@ vectorstore = FAISS.from_embeddings(embedding_pairs, embeddings)
 retriever = vectorstore.as_retriever()
 
 # Deepseek V3
-llm = ChatOpenAI(
-    model_name='deepseek-chat', 
-    openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
-    openai_api_base='https://api.deepseek.com',
-    max_tokens=1024
-)
+# llm = ChatOpenAI(
+#     model_name='deepseek-chat', 
+#     openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
+#     openai_api_base='https://api.deepseek.com',
+#     max_tokens=512
+# )
 
 # Deepseek R1 Distilled
 # model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
@@ -54,9 +54,9 @@ llm = ChatOpenAI(
 # llm = ChatHuggingFace(llm=model)
 
 # LLaMa - can't load locally
-# model = HuggingFaceEndpoint(repo_id="meta-llama/Meta-Llama-3-8B",
-#                             huggingfacehub_api_token=os.getenv('HF_API_KEY'))                  
-# llm = ChatHuggingFace(llm=model)
+model = HuggingFaceEndpoint(repo_id="meta-llama/Meta-Llama-3-8B",
+                            huggingfacehub_api_token=os.getenv('HF_API_KEY'))                  
+llm = ChatHuggingFace(llm=model)
 
 # OpenAI
 # llm = ChatOpenAI(verbose=True, temperature=0, model_name="gpt-3.5-turbo")
