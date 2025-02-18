@@ -95,8 +95,7 @@ margin: 0 auto;
 theme = gr.themes.Soft(
     primary_hue="stone",
     text_size="md",
-    font=[gr.themes.GoogleFont('Newsreader')],
-    font_mono=[gr.themes.GoogleFont('Newsreader')],
+    font=[gr.themes.GoogleFont('Newsreader'), 'ui-sans-serif', 'system-ui', 'sans-serif'],
 )
 
 # Define the interface
