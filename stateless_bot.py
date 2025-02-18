@@ -34,19 +34,19 @@ vectorstore = FAISS.from_embeddings(embedding_pairs, embeddings)
 retriever = vectorstore.as_retriever()
 
 # Deepseek V3
-# llm = ChatOpenAI(
-#     model_name='deepseek-chat', 
-#     openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
-#     openai_api_base='https://api.deepseek.com',
-#     max_tokens=1024
-# )
+llm = ChatOpenAI(
+    model_name='deepseek-chat', 
+    openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
+    openai_api_base='https://api.deepseek.com',
+    max_tokens=1024
+)
 
 # Deepseek R1 Distilled
-model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
-                    #  model_kwargs={"temperature": 0.1, "max_length": 2048, "do_sample": True},
-                     huggingfacehub_api_token=os.getenv('HF_API_KEY')
-    )
-llm = ChatHuggingFace(llm=model)
+# model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+#                     #  model_kwargs={"temperature": 0.1, "max_length": 2048, "do_sample": True},
+#                      huggingfacehub_api_token=os.getenv('HF_API_KEY')
+#     )
+# llm = ChatHuggingFace(llm=model)
 
 # Cohere - doesn't output properly formatted response - can't load locally
 # model = HuggingFaceEndpoint(repo_id="CohereForAI/c4ai-command-r-v01",

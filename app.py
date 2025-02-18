@@ -16,7 +16,7 @@ custom_css = """
 /* Dark Mode */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-color: #121212;
+        --bg-color: #f5ebdf;
         --container-bg: #1e1e1e;
         --text-color: #ffffff;
         --button-bg: #3ea96d;
@@ -86,9 +86,22 @@ def cancel_inference():
     global stop_inference
     stop_inference = True
 
+css = """.gradio-container {
+max-width: 100%;
+margin: 0 auto;
+}
+"""
+
+theme = gr.themes.Soft(
+    primary_hue="stone",
+    text_size="md",
+    font=[gr.themes.GoogleFont('Newsreader')],
+    font_mono=[gr.themes.GoogleFont('Newsreader')],
+)
+
 # Define the interface
-with gr.Blocks(css=custom_css) as demo:
-    gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake's experience</h1>")
+with gr.Blocks(theme=theme) as demo:
+    gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake</h1>")
     # gr.Markdown("")
 
     # Define a persistent state for the system message
