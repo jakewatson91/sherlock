@@ -4,8 +4,8 @@ import gradio as gr
 custom_css = """
 /* Light Mode (Default) */
 :root {
-    --bg-color: #fcf1db;
-    --container-bg: white;
+    --bg-color: ##f5ebdf;
+    --container-bg: #eBe8e6fc;
     --text-color: #333;
     --button-bg: #4CAF50;
     --button-hover-bg: #45a049;
@@ -33,14 +33,14 @@ body {
     color: var(--text-color);
 }
 
-/* Centering the Container */
+/* Main Container - Wider & Shorter */
 .gradio-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 15px; 
     background: var(--container-bg);
-    box-shadow: 0 4px 8px var(--shadow-color);
-    border-radius: 10px;
+    box-shadow: 0 2px 6px var(--shadow-color);
+    border-radius: 8px;
 }
 
 /* Button Styling */
