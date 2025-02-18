@@ -101,6 +101,8 @@ theme = gr.themes.Soft(
 # Define the interface
 with gr.Blocks(theme=theme) as demo:
     gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake</h1>")
+    gr.Radio(["Deepseek V3"], label="Model", info="Model used for inference"),
+
     # gr.Markdown("")
 
     # Define a persistent state for the system message
@@ -112,7 +114,6 @@ with gr.Blocks(theme=theme) as demo:
     # Chat components
     chat_history = gr.Chatbot(label="Chat")
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
-    # output = gr.Textbox()
     cancel_button = gr.Button("Cancel Inference", variant="danger")
 
     # Pass the `system_message_state` to the `response` function
