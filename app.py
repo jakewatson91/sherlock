@@ -2,20 +2,50 @@ from stateless_bot import response
 import gradio as gr
 
 custom_css = """
-#main-container {
-    background-color: #fcf1db;
-    font-family: 'Arial', Helvetica, sans-serif;
+/* Light Mode (Default) */
+:root {
+    --bg-color: #fcf1db;
+    --container-bg: white;
+    --text-color: #333;
+    --button-bg: #4CAF50;
+    --button-hover-bg: #45a049;
+    --input-border: #ccc;
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --container-bg: #1e1e1e;
+        --text-color: #ffffff;
+        --button-bg: #3ea96d;
+        --button-hover-bg: #2f8b59;
+        --input-border: #444;
+        --shadow-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Global Styles */
+body {
+    background-color: var(--bg-color);
+    font-family: 'Arial', Helvetica, sans-serif;
+    color: var(--text-color);
+}
+
+/* Centering the Container */
 .gradio-container {
     max-width: 700px;
     margin: 0 auto;
     padding: 20px;
-    background: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: var(--container-bg);
+    box-shadow: 0 4px 8px var(--shadow-color);
     border-radius: 10px;
 }
+
+/* Button Styling */
 .gr-button {
-    background-color: #4CAF50;
+    background-color: var(--button-bg);
     color: white;
     border: none;
     border-radius: 5px;
@@ -23,20 +53,32 @@ custom_css = """
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
 .gr-button:hover {
-    background-color: #45a049;
+    background-color: var(--button-hover-bg);
 }
-.gr-slider input {
-    color: #4CAF50;
+
+/* Input Fields (Textboxes, Chatbot, and Sliders) */
+.gr-slider input, .gr-textbox input, .gr-textbox textarea, .gr-chatbot {
+    color: var(--text-color);
+    background-color: var(--container-bg);
+    border: 1px solid var(--input-border);
 }
-.gr-chat {
-    font-size: 16px;
+
+/* Chat Messages */
+.gr-chatbot {
+    background: var(--container-bg);
+    color: var(--text-color);
+    border-radius: 10px;
+    padding: 10px;
 }
+
+/* Title */
 #title {
     text-align: center;
     font-size: 2em;
     margin-bottom: 20px;
-    color: #333;
+    color: var(--text-color);
 }
 """
 
@@ -58,7 +100,7 @@ with gr.Blocks(css=custom_css) as demo:
     # Chat components
     chat_history = gr.Chatbot(label="Chat")
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
-    output = gr.Textbox()
+    # output = gr.Textbox()
     cancel_button = gr.Button("Cancel Inference", variant="danger")
 
     # Pass the `system_message_state` to the `response` function

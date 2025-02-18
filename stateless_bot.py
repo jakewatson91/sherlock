@@ -34,19 +34,19 @@ vectorstore = FAISS.from_embeddings(embedding_pairs, embeddings)
 retriever = vectorstore.as_retriever()
 
 # Deepseek V3
-llm = ChatOpenAI(
-    model_name='deepseek-chat', 
-    openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
-    openai_api_base='https://api.deepseek.com',
-    max_tokens=1024
-)
+# llm = ChatOpenAI(
+#     model_name='deepseek-chat', 
+#     openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
+#     openai_api_base='https://api.deepseek.com',
+#     max_tokens=1024
+# )
 
-# Deepseek R1 Distilled - doesn't output properly formatted response
-# model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
-#                     #  model_kwargs={"temperature": 0.1, "max_length": 2048, "do_sample": True},
-#                      huggingfacehub_api_token=os.getenv('HF_API_KEY')
-#     )
-# llm = ChatHuggingFace(llm=model)
+# Deepseek R1 Distilled
+model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+                    #  model_kwargs={"temperature": 0.1, "max_length": 2048, "do_sample": True},
+                     huggingfacehub_api_token=os.getenv('HF_API_KEY')
+    )
+llm = ChatHuggingFace(llm=model)
 
 # Cohere - doesn't output properly formatted response - can't load locally
 # model = HuggingFaceEndpoint(repo_id="CohereForAI/c4ai-command-r-v01",
@@ -72,14 +72,14 @@ def load_sys_message(file_path="system_message.txt"):
 system_message = load_sys_message()
 
 chat_history = []
-def response(model=llm, user_input=test_msg, chat_history=chat_history):
+def response(user_input=test_msg, chat_history=chat_history):
     
     prompt = ChatPromptTemplate([
     ("system", "{system_message} Your name is Sherlock. {context}"),
     ("human", "{input}"),
     ])
-    # print(prompt)
-    qa_chain = create_stuff_documents_chain(model, prompt)
+
+    qa_chain = create_stuff_documents_chain(llm, prompt)
     chain = create_retrieval_chain(retriever, qa_chain)    
 
     response = chain.invoke({"system_message": system_message, "input": user_input, "context": chat_history})
@@ -88,10 +88,11 @@ def response(model=llm, user_input=test_msg, chat_history=chat_history):
     # print(response.keys())
     print(f"Response Answer: {response['answer']}")
 
-    history = (user_input, response["answer"])
+    history = [user_input, response["answer"]]
     chat_history.append(history)
+    print("Chat History Format:", [type(msg) for msg in chat_history])
     print(f"Chat history: {chat_history}")
-    # yield response, chat_history
+    yield chat_history
 
 if __name__ == "__main__":
     response()
