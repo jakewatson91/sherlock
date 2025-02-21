@@ -92,6 +92,7 @@ margin: 0 auto;
 }
 """
 
+# set design theme
 theme = gr.themes.Soft(
     primary_hue="stone",
     text_size="md",
@@ -101,9 +102,9 @@ theme = gr.themes.Soft(
 # Define the interface
 with gr.Blocks(theme=theme) as demo:
     gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake</h1>")
-    model_choices = ["Deepseek V3"]
-    gr.Radio(model_choices, label="Model", info="Model used for inference", value=model_choices[0]),
-
+    
+    model_list = ["DeepSeek-V3", "Cohere Command-R", "OpenAI ChatGPT-3.5"]
+    model_selection = gr.Radio(model_list, label="Model", info="Model used for inference", value=model_list[0])
     # gr.Markdown("")
 
     # Define a persistent state for the system message
@@ -117,8 +118,7 @@ with gr.Blocks(theme=theme) as demo:
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
     cancel_button = gr.Button("Cancel Inference", variant="danger")
 
-    # Pass the `system_message_state` to the `response` function
-    user_input.submit(response, inputs=[user_input, chat_history], outputs=chat_history)
+    user_input.submit(response, inputs=[model_selection, user_input, chat_history], outputs=chat_history)
 
     cancel_button.click(cancel_inference)
 
