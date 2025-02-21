@@ -12,7 +12,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_community.vectorstores import FAISS
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_cohere import ChatCohere
 from langchain_pinecone import PineconeVectorStore
 from langchain_openai.chat_models.base import BaseChatOpenAI

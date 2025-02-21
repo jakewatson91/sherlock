@@ -22,7 +22,7 @@ deepseekr1_model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-
 deepseekr1_llm = ChatHuggingFace(llm=deepseekr1_model)
 
 # Cohere - 
-cohere_llm = ChatCohere(api_key=os.getenv('COHERE_API_KEY'), model='command-r', max_tokens=128) # TRIAL limited, swap to COHERE_API_KEY for paid
+cohere_llm = ChatCohere(api_key=os.getenv('COHERE_TRIAL_KEY'), model='command-r', max_tokens=128) # TRIAL limited, swap to COHERE_API_KEY for paid
 
 # OpenAI
 openai_llm = ChatOpenAI(verbose=True, temperature=0, model_name="gpt-3.5-turbo", max_tokens=128)
