@@ -10,3 +10,4 @@ python-dotenv
 pypdf
 faiss-cpu
 gradio==5.16.0
+langchain_cohere
