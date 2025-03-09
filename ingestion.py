@@ -17,7 +17,7 @@ if __name__ == "__main__":
                                   )
 
     # load pdf document
-    loader = PyPDFLoader("data/resume_data_intern_2025.pdf")
+    loader = PyPDFLoader("data/experience_for_sherlock.pdf")
     documents = loader.load()
     
     # split entire documents into chunks  

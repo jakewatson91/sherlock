@@ -1,8 +1,9 @@
 import os
 from dotenv import load_dotenv
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_cohere import ChatCohere
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 load_dotenv()
 
@@ -11,6 +12,8 @@ deepseekv3_llm = ChatOpenAI(
     model_name='deepseek-chat', 
     openai_api_key=os.getenv('DEEPSEEK_API_KEY'), 
     openai_api_base='https://api.deepseek.com',
+    streaming=True,
+    callbacks=[StreamingStdOutCallbackHandler()],
     max_tokens=128
 )
 
@@ -22,7 +25,15 @@ deepseekr1_model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-
 deepseekr1_llm = ChatHuggingFace(llm=deepseekr1_model)
 
 # Cohere - 
-cohere_llm = ChatCohere(api_key=os.getenv('COHERE_TRIAL_KEY'), model='command-r', max_tokens=128) # TRIAL limited, swap to COHERE_API_KEY for paid
+cohere_llm = ChatCohere(api_key=os.getenv('COHERE_TRIAL_KEY'), 
+                        model='command-r', 
+                        max_tokens=128) # TRIAL limited, swap to COHERE_API_KEY for paid
 
 # OpenAI
-openai_llm = ChatOpenAI(verbose=True, temperature=0, model_name="gpt-3.5-turbo", max_tokens=128)
+openai_llm = ChatOpenAI(verbose=True, 
+                        temperature=0, 
+                        model_name="gpt-3.5-turbo", 
+                        streaming=True,
+                        callbacks=[StreamingStdOutCallbackHandler()],
+                        max_tokens=128
+                        )
