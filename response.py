@@ -12,18 +12,24 @@ from models import deepseekv3_llm, cohere_llm, openai_llm
 warnings.filterwarnings("ignore")
 
 load_dotenv()
-test_msg = "Give me a quick summary of Jake's experience"
 
-# Convert document embedding to NumPy arra
-with open('data/embedding_pairs.pkl', 'rb') as f:
+with open("data/embedding_pairs.pkl", "rb") as f:
     embedding_pairs = pickle.load(f)
 
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small", 
-                                openai_api_key=os.getenv("OPENAI_API_KEY")
-                                )
-# Create and index the document
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=os.getenv("OPENAI_API_KEY"))
 vectorstore = FAISS.from_embeddings(embedding_pairs, embeddings)
 retriever = vectorstore.as_retriever()
+
+test_msg = "Give me a quick summary of Jake's experience"
+
+stop_inference = False
+def cancel_inference():
+    """
+    Called from the Gradio UI. 
+    Sets the global flag so the generator can stop.
+    """
+    global stop_inference
+    stop_inference = True
 
 def load_sys_message(file_path="system_message.txt"):
     with open(file_path, 'r') as f:
@@ -42,7 +48,8 @@ model_dict = {"DeepSeek-V3" : deepseekv3_llm,
                 "OpenAI ChatGPT-3.5" : openai_llm
     }
 
-def response(model_selection, user_input=test_msg, chat_history=chat_history): 
+def response(model_selection, user_input=test_msg, chat_history=chat_history):
+    global stop_inference
     print("Selected model: ", model_selection)  
     llm = model_dict.get(model_selection)
     prompt = ChatPromptTemplate([
@@ -53,20 +60,26 @@ def response(model_selection, user_input=test_msg, chat_history=chat_history):
     qa_chain = create_stuff_documents_chain(llm, prompt)
     chain = create_retrieval_chain(retriever, qa_chain)    
 
-    response = chain.invoke({"system_message": system_message, "input": user_input, "context": chat_history})
+    response_stream = chain.stream({"system_message": system_message, "input": user_input, "context": chat_history})
     # print(f"Response: {response['input']}")
     # print(f"Response Context: {response['context']}")
     # print(response.keys())
-    print(f"Response Answer: {response['answer']}")
+    # print(f"Response Answer: {response['answer']}")
 
-    full_answer = response["answer"]
+    # full_answer = response["answer"]
     chat_history.append([user_input, ""])  # Add placeholder for assistant reply
 
     current_text = ""
-    for token in full_answer:
+    for token in response_stream:
+        if stop_inference:
+            stop_inference = False
+            break
         current_text += token
         chat_history[-1][1] = current_text
         yield chat_history
 
 if __name__ == "__main__":
-    response(model_selection="DeepSeek-V3") # for testing
+    for chunk in response(model_selection="OpenAI ChatGPT-3.5"): # for testing
+        pass
+    print(chunk[-1][1]["answer"]) # final response
+

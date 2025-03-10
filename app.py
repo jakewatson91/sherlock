@@ -1,4 +1,4 @@
-from stateless_bot import response
+from response import response, cancel_inference
 import gradio as gr
 
 custom_css = """
@@ -81,10 +81,6 @@ body {
     color: var(--text-color);
 }
 """
-
-def cancel_inference():
-    global stop_inference
-    stop_inference = True
 
 css = """.gradio-container {
 max-width: 100%;
