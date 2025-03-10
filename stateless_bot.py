@@ -59,10 +59,14 @@ def response(model_selection, user_input=test_msg, chat_history=chat_history):
     # print(response.keys())
     print(f"Response Answer: {response['answer']}")
 
-    history = [user_input, response["answer"]]
-    chat_history.append(history)
-    print(f"Chat history: {chat_history}")
-    return chat_history
+    full_answer = response["answer"]
+    chat_history.append([user_input, ""])  # Add placeholder for assistant reply
+
+    current_text = ""
+    for token in full_answer:
+        current_text += token
+        chat_history[-1][1] = current_text
+        yield chat_history
 
 if __name__ == "__main__":
     response(model_selection="DeepSeek-V3") # for testing
