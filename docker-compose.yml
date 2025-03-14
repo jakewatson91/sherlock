@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  sherlock-vllm:
+    image: vllm/vllm-openai
+    ports:
+      - "8000:8000"
+    command: [
+      "--model", "meta-llama/Llama-2-7b-chat-hf",
+      "--host", "0.0.0.0",
+      "--port", "8000"
+    ]

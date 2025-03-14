@@ -1,3 +1,4 @@
+vllm
 langchain
 openai
 pinecone-client
