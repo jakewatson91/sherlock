@@ -6,6 +6,7 @@ from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 load_dotenv()
+# os.environ["OPENAI_API_BASE"] = "http://35.232.28.84:8000/v1"
 
 # Deepseek V3
 deepseekv3_llm = ChatOpenAI(
@@ -25,9 +26,9 @@ deepseekr1_model = HuggingFaceEndpoint(repo_id='deepseek-ai/DeepSeek-R1-Distill-
 deepseekr1_llm = ChatHuggingFace(llm=deepseekr1_model)
 
 # Cohere - 
-cohere_llm = ChatCohere(api_key=os.getenv('COHERE_TRIAL_KEY'), 
-                        model='command-r', 
-                        max_tokens=128) # TRIAL limited, swap to COHERE_API_KEY for paid
+# cohere_llm = ChatCohere(api_key=os.getenv('COHERE_TRIAL_KEY'), 
+#                         model='command-r', 
+#                         max_tokens=128) # TRIAL limited, swap to COHERE_API_KEY for paid
 
 # OpenAI
 openai_llm = ChatOpenAI(verbose=True, 
@@ -37,3 +38,22 @@ openai_llm = ChatOpenAI(verbose=True,
                         callbacks=[StreamingStdOutCallbackHandler()],
                         max_tokens=128
                         )
+
+# Llama
+llama_llm = HuggingFaceEndpoint(repo_id='meta-llama/Llama-3.2-3B-Instruct',
+                                task="text-generation",
+                                huggingfacehub_api_token=os.getenv('HF_API_KEY'),
+                                temperature=0.1,
+                                model_kwargs = {
+                                    "stop": ["<|eot_id|>"]
+
+                                    }
+                                )
+
+
+# Google
+google_gemma_llm = HuggingFaceEndpoint(repo_id='google/gemma-2-2b-it',
+                                       task="text-generation",
+                                       huggingfacehub_api_token=os.getenv('HF_API_KEY'),
+                                       temperature=0.1
+                                       )
