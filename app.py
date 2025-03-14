@@ -34,10 +34,10 @@ test_msg = "Give me a quick summary of Jake's experience"
 chat_history = []
 
 model_dict = {
-    "OpenAI ChatGPT-3.5" : openai_llm,
-    "DeepSeek-V3" : deepseekv3_llm,
+    "Llama-3.2 3B" : llama_llm,
     "Google Gemma-2 2B" : google_gemma_llm,
-    "Llama-3.2 3B" : llama_llm
+    "OpenAI ChatGPT-3.5" : openai_llm,
+    "DeepSeek-V3" : deepseekv3_llm
     }
 
 def load_sys_message(file_path="system_message.txt"):
