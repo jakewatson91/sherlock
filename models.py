@@ -45,7 +45,7 @@ llama_llm = HuggingFaceEndpoint(repo_id='meta-llama/Llama-3.2-3B-Instruct',
                                 huggingfacehub_api_token=os.getenv('HF_API_KEY'),
                                 temperature=0.1,
                                 model_kwargs = {
-                                    "stop": ["<|eot_id|>", "Question:", "\n"]
+                                    "stop": ["<|eot_id|>", "Question:"]
 
                                     }
                                 )
