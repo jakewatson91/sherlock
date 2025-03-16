@@ -37,8 +37,7 @@ test_msg = "Give me a quick summary of Jake's experience"
 chat_history = []
 
 model_dict = {
-    "OpenAI ChatGPT-3.5" : openai_llm,
-    "DeepSeek-V3" : deepseekv3_llm
+    "OpenAI ChatGPT-3.5" : openai_llm
     }
 
 def load_sys_message(file_path="system_message.txt"):
@@ -85,7 +84,7 @@ with gr.Blocks(theme=theme) as demo:
     system_message = gr.State(system_message)
     model_list = list(model_dict.keys())
     model_selection = gr.Radio(model_list, label="Model", info="Model used for inference", value=model_list[0])
-    
+
     chat_history = gr.Chatbot(label="Chat", type="messages")
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
     
@@ -97,7 +96,7 @@ with gr.Blocks(theme=theme) as demo:
                         ["Give me a list of 10 technologies Jake has experience with and his level in each"]
                     ],
                     fn=response,
-                    inputs=[user_input, model_selection, chat_history, system_message],
+                    inputs=[user_input, selected_model, chat_history, system_message],
                     outputs=chat_history,
                     run_on_click=True
                 )
