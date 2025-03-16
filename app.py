@@ -8,6 +8,9 @@ from langchain.prompts import PromptTemplate
 from ingestion import load_embeddings
 from models import deepseekv3_llm, openai_llm, llama_llm, google_gemma_llm
 
+import warnings
+warnings.filterwarnings("ignore")
+
 css = """.gradio-container {
 max-width: 100%;
 margin: 0 auto;
@@ -46,10 +49,17 @@ def load_sys_message(file_path="system_message.txt"):
 
 system_message = load_sys_message()
 
-def response(model_selection, user_input=test_msg, chat_history=chat_history, system_message=system_message):
-    print("Selected model: ", model_selection)  
-    llm = model_dict.get(model_selection)
-    
+curr_model = None
+curr_selection = None
+def response(user_input=test_msg, model_selection="Llama-3.2 3B", chat_history=chat_history, system_message=system_message):
+    global curr_model, curr_selection
+    llm = curr_model
+    if not curr_model or curr_selection != model_selection: # only run if model changes
+        llm = model_dict.get(model_selection)
+        curr_model = llm
+        curr_selection = model_selection
+    print("Selected model: ", curr_selection)  
+
     if model_selection in ["OpenAI ChatGPT-3.5", "DeepSeek-V3"]:
         # structured prompts for more structured models
         prompt = ChatPromptTemplate([
@@ -63,7 +73,7 @@ def response(model_selection, user_input=test_msg, chat_history=chat_history, sy
             template="""
                 {system_message}\n
                 ONLY use the context below to answer the question.
-                Do NOT make up facts. If the answer is not in the context, say "Sorry, I don't have the answer to that."
+                Do NOT make up facts. If the answer is not in the context, say "Sorry, I don't have that in my docs. That's a question for Jake himself!"
 
                 Context:
                 {context}
@@ -94,7 +104,7 @@ with gr.Blocks(theme=theme) as demo:
     gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake</h1>")
     system_message = gr.State(system_message)
     model_list = list(model_dict.keys())
-    model_selection = gr.Radio(model_list, label="Model", info="Model used for inference", value=model_list[0])
+    model_selection = gr.Dropdown(model_list, label="Model", info="Model used for inference", value=model_list[0])
     # gr.Markdown("")
 
     # Parameters for model control
@@ -103,9 +113,52 @@ with gr.Blocks(theme=theme) as demo:
     # Chat components
     chat_history = gr.Chatbot(label="Chat", type="messages")
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
+    
     cancel_button = gr.Button("Cancel Inference", variant="danger")
 
-    run_inference = user_input.submit(response, inputs=[model_selection, user_input, chat_history, system_message], outputs=chat_history)
+    run_inference = user_input.submit(response, inputs=[user_input, model_selection, chat_history, system_message], outputs=chat_history)
+
+    with gr.Column():
+        gr.Markdown("### Example Questions")
+        current_model_state = gr.State(model_selection.value)
+        model_selection.change(fn=lambda x: x, inputs=model_selection, outputs=current_model_state)
+        
+        example_questions = [
+            "What's Jake's experience in SQL?",
+            "Tell me about a Python project Jake worked on.",
+            "How many years has Jake worked in data?",
+            "Give me a list of 10 technologies Jake has experience with and his level in each"
+        ]
+        
+        for question in example_questions:
+            btn = gr.Button(question)
+            # First, update the user_input with the example question.
+            btn.click(fn=lambda q=question: q, inputs=[], outputs=user_input).then(
+                # Then, automatically trigger response using the current model state.
+                fn=response,
+                inputs=[user_input, current_model_state, chat_history, system_message],
+                outputs=chat_history
+            )
+
+    # examples = [
+    #     "What's Jake's experience in SQL?",
+    #     "Tell me about a Python project Jake worked on.",
+    #     "How many years has Jake worked in data?",
+    #     "Give me a list of 10 technologies Jake has experience with and his level in each"
+    # ]
+
+    # for example in examples:
+    #     btn = gr.Button(example)
+    #     btn.click(
+    #         fn=lambda e=example: e,
+    #         inputs=[],
+    #         outputs=[user_input]
+    #     )
+    # user_input.change(
+    #     fn=response,
+    #     inputs=[user_input, model_selection, chat_history, system_message],
+    #     outputs=chat_history
+    # )
 
     cancel_button.click(fn=None, cancels=run_inference)
 
