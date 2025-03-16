@@ -88,18 +88,18 @@ with gr.Blocks(theme=theme) as demo:
     chat_history = gr.Chatbot(label="Chat", type="messages")
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
     
-    # examples = gr.Examples(
-    #                 examples = [
-    #                     ["What's Jake's experience in SQL?"],
-    #                     ["Tell me about a Python project Jake worked on."],
-    #                     ["How many years has Jake worked in data?"],
-    #                     ["Give me a list of 10 technologies Jake has experience with and his level in each"]
-    #                 ],
-    #                 fn=response,
-    #                 inputs=[user_input, model_selection, chat_history, system_message],
-    #                 outputs=chat_history,
-    #                 run_on_click=True
-    #             )
+    examples = gr.Examples(
+                    examples = [
+                        ["What's Jake's experience in SQL?"],
+                        ["Tell me about a Python project Jake worked on."],
+                        ["How many years has Jake worked in data?"],
+                        ["Give me a list of 10 technologies Jake has experience with and his level in each"]
+                    ],
+                    fn=response,
+                    inputs=[user_input],
+                    outputs=chat_history,
+                    run_on_click=True
+                )
     run_inference = user_input.submit(response, inputs=[user_input, model_selection, chat_history, system_message], outputs=chat_history)
     cancel_button = gr.Button("Cancel Inference", variant="danger")
     cancel_inference = cancel_button.click(fn=None, cancels=run_inference)
