@@ -96,7 +96,7 @@ with gr.Blocks(theme=theme) as demo:
                         ["Give me a list of 10 technologies Jake has experience with and his level in each"]
                     ],
                     fn=response,
-                    inputs=[user_input, selected_model, chat_history, system_message],
+                    inputs=[user_input, model_selection, chat_history, system_message],
                     outputs=chat_history,
                     run_on_click=True
                 )
