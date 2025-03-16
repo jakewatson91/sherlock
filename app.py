@@ -49,7 +49,7 @@ system_message = load_sys_message()
 
 curr_model = None
 curr_selection = None
-def response(user_input=test_msg, model_selection="Llama-3.2 3B", chat_history=chat_history, system_message=system_message):
+def response(user_input=test_msg, model_selection="OpenAI ChatGPT-3.5", chat_history=chat_history, system_message=system_message):
     global curr_model, curr_selection
     llm = curr_model
     if not curr_model or curr_selection != model_selection: # only run if model changes
@@ -108,7 +108,7 @@ with gr.Blocks(theme=theme) as demo:
 
 if __name__ == "__main__":
     demo.launch(share=False)  # Remove share=True because it's not supported on HF Spaces
-    for chunk in response(model_selection="Llama-3.2 3B"): # for testing
+    for chunk in response(): # for testing
         pass
     print("\n\n\n\n###################### RESPONSE ################## \n\n\n", chunk[-1].content) # final response
 
