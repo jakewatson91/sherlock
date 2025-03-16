@@ -37,8 +37,6 @@ test_msg = "Give me a quick summary of Jake's experience"
 chat_history = []
 
 model_dict = {
-    "Llama-3.2 3B" : llama_llm,
-    "Google Gemma-2 2B" : google_gemma_llm,
     "OpenAI ChatGPT-3.5" : openai_llm,
     "DeepSeek-V3" : deepseekv3_llm
     }
@@ -60,29 +58,12 @@ def response(user_input=test_msg, model_selection="Llama-3.2 3B", chat_history=c
         curr_selection = model_selection
     print("Selected model: ", curr_selection)  
 
-    if model_selection in ["OpenAI ChatGPT-3.5", "DeepSeek-V3"]:
-        # structured prompts for more structured models
-        prompt = ChatPromptTemplate([
-            ("system", "{system_message} Your name is Sherlock. {context}"),
-            ("human", "{input}"),
-            ]) 
-    else:
-        prompt = PromptTemplate(
-            input_variables=["system_message", "context", "input"],
-            # template="{system_message}\nYour name is Sherlock.\n{context}\n\nQuestion: {input}"
-            template="""
-                {system_message}\n
-                ONLY use the context below to answer the question.
-                Do NOT make up facts. If the answer is not in the context, say "Sorry, I don't have that in my docs. That's a question for Jake himself!"
-
-                Context:
-                {context}
-
-                Question: {input}
-                Answer:
-                """
-        )
-
+    # structured prompts for more structured models
+    prompt = ChatPromptTemplate([
+        ("system", "{system_message} Your name is Sherlock. {context}"),
+        ("human", "{input}"),
+        ]) 
+    
     qa_chain = create_stuff_documents_chain(llm, prompt)
     chain = create_retrieval_chain(retriever, qa_chain)    
 
@@ -95,72 +76,35 @@ def response(user_input=test_msg, model_selection="Llama-3.2 3B", chat_history=c
     for token in response_stream:
         answer = token.get("answer", "") # token is list of dicts - 'answer' shows up after a few iterations
         current_text += answer 
-        cleaned_text = current_text.split("<|eot_id|>")[0].strip() # for LLama
-        chat_history[-1].content = cleaned_text # Gradio expects tuples - for each user input, update with last version of response
+        chat_history[-1].content = current_text # Gradio expects tuples - for each user input, update with last version of response
         yield chat_history
 
-# Define the interface
+### Define the interface ###
 with gr.Blocks(theme=theme) as demo:
     gr.Markdown("<h1 style='text-align: center;'>Ask Sherlock about Jake</h1>")
     system_message = gr.State(system_message)
     model_list = list(model_dict.keys())
-    model_selection = gr.Dropdown(model_list, label="Model", info="Model used for inference", value=model_list[0])
-    # gr.Markdown("")
-
-    # Parameters for model control
-    # temperature = gr.Slider(minimum=0.0, maximum=4.0, value=0.7, step=0.1, label="Temperature") # change to something like intensity: https://www.gradio.app/guides/quickstart
-
-    # Chat components
+    model_selection = gr.Radio(model_list, label="Model", info="Model used for inference", value=model_list[0])
+    
     chat_history = gr.Chatbot(label="Chat", type="messages")
     user_input = gr.Textbox(show_label=False, placeholder="What would you like to know about Jake?")
     
-    cancel_button = gr.Button("Cancel Inference", variant="danger")
-
+    examples = gr.Examples(
+                    examples = [
+                        ["What's Jake's experience in SQL?"],
+                        ["Tell me about a Python project Jake worked on."],
+                        ["How many years has Jake worked in data?"],
+                        ["Give me a list of 10 technologies Jake has experience with and his level in each"]
+                    ],
+                    fn=response,
+                    inputs=[user_input, model_selection, chat_history, system_message],
+                    outputs=chat_history,
+                    run_on_click=True
+                )
     run_inference = user_input.submit(response, inputs=[user_input, model_selection, chat_history, system_message], outputs=chat_history)
+    cancel_button = gr.Button("Cancel Inference", variant="danger")
+    cancel_inference = cancel_button.click(fn=None, cancels=run_inference)
 
-    with gr.Column():
-        gr.Markdown("### Example Questions")
-        current_model_state = gr.State(model_selection.value)
-        model_selection.change(fn=lambda x: x, inputs=model_selection, outputs=current_model_state)
-        
-        example_questions = [
-            "What's Jake's experience in SQL?",
-            "Tell me about a Python project Jake worked on.",
-            "How many years has Jake worked in data?",
-            "Give me a list of 10 technologies Jake has experience with and his level in each"
-        ]
-        
-        for question in example_questions:
-            btn = gr.Button(question)
-            # First, update the user_input with the example question.
-            btn.click(fn=lambda q=question: q, inputs=[], outputs=user_input).then(
-                # Then, automatically trigger response using the current model state.
-                fn=response,
-                inputs=[user_input, current_model_state, chat_history, system_message],
-                outputs=chat_history
-            )
-
-    # examples = [
-    #     "What's Jake's experience in SQL?",
-    #     "Tell me about a Python project Jake worked on.",
-    #     "How many years has Jake worked in data?",
-    #     "Give me a list of 10 technologies Jake has experience with and his level in each"
-    # ]
-
-    # for example in examples:
-    #     btn = gr.Button(example)
-    #     btn.click(
-    #         fn=lambda e=example: e,
-    #         inputs=[],
-    #         outputs=[user_input]
-    #     )
-    # user_input.change(
-    #     fn=response,
-    #     inputs=[user_input, model_selection, chat_history, system_message],
-    #     outputs=chat_history
-    # )
-
-    cancel_button.click(fn=None, cancels=run_inference)
 
 if __name__ == "__main__":
     demo.launch(share=False)  # Remove share=True because it's not supported on HF Spaces
