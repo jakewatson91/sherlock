@@ -1,0 +1,21 @@
+# Security
+.env
+
+# Environments
+.venv/
+env/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Editor
+.vscode/
+
+# Chainlit/Local Data
+.files/
+.chainlit/
+
+# Ignore local data mirror (synced from HF Datasets)
+data/

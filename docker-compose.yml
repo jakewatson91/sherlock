@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  sherlock:
+    build: .
+    ports:
+      - "7860:7860"
+    env_file:
+      - .env

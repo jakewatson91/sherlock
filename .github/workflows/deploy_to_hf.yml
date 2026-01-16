@@ -1,0 +1,25 @@
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # allows manual trigger via GitHub UI
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+      - name: Push to Hugging Face Spaces
+        run: |
+          git remote get-url space >/dev/null 2>&1 || git remote add space https://jakewatson91:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/jakewatson91/sherlock
+          git push -f space main
