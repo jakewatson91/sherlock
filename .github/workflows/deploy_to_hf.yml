@@ -1,25 +1,27 @@
-name: Deploy to Hugging Face Spaces
-
+name: Sync to Hugging Face hub
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:  # allows manual trigger via GitHub UI
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  sync-to-hub:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: false # We are using HF Datasets now, so we don't want LFS
 
-      - name: Set up Git
+      - name: Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-
-      - name: Push to Hugging Face Spaces
-        run: |
-          git remote get-url space >/dev/null 2>&1 || git remote add space https://jakewatson91:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/jakewatson91/sherlock
+          # 1. Setup credentials
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          
+          # 2. Force push to overwrite the HF Space history
+          git remote add space https://jakewatson91:$HF_TOKEN@huggingface.co/spaces/jakewatson91/sherlock || git remote set-url space https://jakewatson91:$HF_TOKEN@huggingface.co/spaces/jakewatson91/sherlock
+          
           git push -f space main
