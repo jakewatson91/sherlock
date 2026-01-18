@@ -1,19 +1,24 @@
 FROM python:3.10-slim
 
-WORKDIR /app
+# 1. Setup the low-privilege user required by Hugging Face
+RUN useradd -m -u 1000 user
+USER user
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+# 2. THE FIX: Add the hidden local bin folder to the system PATH
+ENV PATH="/home/user/.local/bin:$PATH"
 
-# Install Python requirements
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /home/user/app
 
-# Copy your app code (the snapshot_download logic is inside app.py)
-COPY . .
+# 3. Install dependencies as that user
+# We use --chown to make sure 'user' owns the files, not 'root'
+COPY --chown=user:user requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
 
-# Expose the port (informative only)
-EXPOSE 7860
+# 4. Copy the rest of your app
+COPY --chown=user:user . .
 
-# Start the app on the correct HF port
+# 5. Create the data folder for your PDFs
+RUN mkdir -p data
+
+# 6. Launch Chainlit on the HF-mandated port
 CMD ["chainlit", "run", "app.py", "--host", "0.0.0.0", "--port", "7860"]

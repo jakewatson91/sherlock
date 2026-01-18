@@ -32,7 +32,7 @@ This project follows a decoupled data-and-code architecture:
 
 ### Prerequisites
 
-- Python 3.10+
+- Python 3.11+
 - A Hugging Face **Write** Token
 - API Keys for:
   - Groq (Moonshot AI)

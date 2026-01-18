@@ -1,0 +1,27 @@
+# --- Security (CRITICAL) ---
+.env
+
+# --- Heavy & Unnecessary System Folders ---
+.git
+.github
+.vscode
+.DS_Store
+
+# --- Python & Dependencies ---
+# Prevents conflicts between your Mac's env and the Docker Linux env
+.venv
+__pycache__
+*.pyc
+.python-version
+
+# --- App Data & Cache ---
+# Your script downloads data on startup; don't bake stale local data into the image
+data/
+.chainlit
+.files
+
+# --- Docker Configs ---
+# The container doesn't need to know how to build itself
+Dockerfile
+docker-compose.yml
+.dockerignore
