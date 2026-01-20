@@ -1,0 +1,43 @@
+/* --- LOGO HANDLING --- */
+
+/* Increase specificity by targeting the parent ID */
+#welcome-screen img {
+  content: url("/public/logo2_light.png");
+  width: 400px; 
+  height: auto;
+}
+
+html.dark #welcome-screen img {
+  content: url("/public/logo2_dark.png");
+}
+
+/* --- LIGHT THEME (Default) --- */
+
+/* Using 'html body' increases specificity enough to override defaults */
+html body {
+  background-color: #f7f3f0;
+  font-family: "Georgia", serif;
+}
+
+/* Targeting the class specifically on the body */
+body .bg-accent {
+  background-color: #ffffff;
+}
+
+/* --- DARK THEME OVERRIDES --- */
+
+/* Chainlit adds the .dark class to the <html> tag */
+html.dark body {
+  background-color: #121212;
+}
+
+html.dark .bg-accent {
+  background-color: #1e1e1e;
+}
+
+/* --- SHARED STYLES --- */
+
+#message-composer textarea {
+  background: transparent;
+  font-family: "Georgia", serif;
+}

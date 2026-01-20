@@ -27,7 +27,11 @@ system_prompt = load_sys_prompt()
 
 @tool(response_format="content_and_artifact")
 def retrieve_context(query: str) -> str:
-    """Retrieve information to help answer a query."""
+    """Call this tool ONLY when the user asks specific questions about Jake's 
+    career, skills, experience, or resume. 
+    
+    DO NOT call this tool for greetings, small talk, or general questions.
+    """
 
     print(f"DEBUG: Tool called with query: {query}") # See this in your terminal
     retrieved_docs = vector_store.similarity_search(query, k=2)

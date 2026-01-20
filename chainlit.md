@@ -1,14 +1,27 @@
-# Welcome to Chainlit! 🚀🤖
+# Sherlock.
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+Sherlock is a RAG-powered interactive profile of Jake Watson.
 
-## Useful Links 🔗
+---
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+### 🔍 Expertise
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
+- **Data Infrastructure**: Specializing in GenAI and data infrastructure development, with recent experience at **Amazon**.
+- **AI Research**: Researching **LLM-Bandit routing** and exploring fine-tuning techniques like **LoRA** and **DoRA**.
+- **Academic Foundations**: Pursuing a **Master of Computer Science** with an AI concentration at **Worcester Polytechnic Institute (WPI)**.
 
-## Welcome screen
+---
 
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
+### 🛠️ Technical Provenance
+
+- **Frontend**: **Chainlit** (Custom Editorial Theme).
+- **Orchestration**: **LangGraph** for complex agentic workflows.
+- **Inference**: **Groq LPU** for low-latency response generation.
+
+---
+
+### 📂 Inquiries
+
+- _"What is Jake’s experience with fine-tuning Large Language Models?"_
+- _"Explain the methodology behind the LLM-Bandit routing project."_
+- _"What technical skills did Jake develop at Amazon and WPI?"_
