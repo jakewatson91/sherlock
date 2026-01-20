@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # 1. Setup the low-privilege user required by Hugging Face
 RUN useradd -m -u 1000 user
