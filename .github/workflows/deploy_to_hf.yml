@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # allows manual trigger via GitHub UI
+  workflow_dispatch: # allows manual trigger via GitHub UI
 
 jobs:
   deploy:
@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # This ensures the full history is retrieved
 
       - name: Set up Git
         run: |
@@ -21,5 +23,6 @@ jobs:
 
       - name: Push to Hugging Face Spaces
         run: |
+          git checkout main
           git remote get-url space >/dev/null 2>&1 || git remote add space https://jakewatson91:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/jakewatson91/sherlock
           git push -f space main
