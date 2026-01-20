@@ -14,6 +14,18 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+from huggingface_hub import HfApi
+
+# 1. Is the key actually there?
+print(f"DEBUG - Token exists: {bool(os.environ.get('HF_TOKEN'))}")
+
+# 2. Does HF recognize this key?
+try:
+    print(f"DEBUG - Auth check: {HfApi(token=os.environ.get('HF_TOKEN')).whoami()['name']}")
+except Exception as e:
+    print(f"DEBUG - Auth failed: {e}")
+
+
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 embedding_model = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
 vector_store = InMemoryVectorStore(embedding_model)
@@ -55,7 +67,7 @@ async def on_chat_start():
             repo_type="dataset",
             local_dir="data/",
             allow_patterns="*.pdf",
-            token=os.environ.get("HF_TOKEN")
+            token=True
         )
     except Exception as e:
         print(f"Error downloading data: {e}")
