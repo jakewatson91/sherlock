@@ -16,6 +16,8 @@ __pycache__/
 # Chainlit/Local Data
 .files/
 .chainlit/
+# allow config
+!.chainlit/config.toml
 
 # Ignore local data mirror (synced from HF Datasets)
 data/
