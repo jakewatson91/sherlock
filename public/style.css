@@ -2,13 +2,13 @@
 
 /* Increase specificity by targeting the parent ID */
 #welcome-screen img {
-  content: url("/public/logo2_light.png");
+  content: url("public/logo2_light.png");
   width: 400px; 
   height: auto;
 }
 
 html.dark #welcome-screen img {
-  content: url("/public/logo2_dark.png");
+  content: url("public/logo2_dark.png");
 }
 
 /* --- LIGHT THEME (Default) --- */
