@@ -17,7 +17,7 @@ __pycache__
 # --- App Data & Cache ---
 # Your script downloads data on startup; don't bake stale local data into the image
 data/
-.chainlit
+.chainlit/translations
 .files
 
 # --- Docker Configs ---
