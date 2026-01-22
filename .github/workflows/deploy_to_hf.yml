@@ -22,10 +22,10 @@ jobs:
           git config user.email "actions@github.com"
 
       - name: Push to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git checkout main
-          git remote get-url space >/dev/null 2>&1 || git remote add space https://jakewatson91:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/jakewatson91/sherlock
-          git push -f space main
+          git push -f https://jakewatson91:$HF_TOKEN@huggingface.co/spaces/jakewatson91/sherlock HEAD:main
 
       - name: Trigger Hugging Face Rebuild
         run: |
