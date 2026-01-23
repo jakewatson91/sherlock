@@ -1,0 +1,6 @@
+/* Update the selector to match the element in the inspector */
+img.logo {
+    width: 300px !important; /* Change 300px to your desired size */
+    height: auto !important; /* Preserves aspect ratio */
+    max-height: none !important; /* Removes any height caps */
+}
