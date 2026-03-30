@@ -12,34 +12,38 @@ from typing import cast
 import os
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-embedding_model = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+
+embedding_model = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 vector_store = InMemoryVectorStore(embedding_model)
 
 
 def load_sys_prompt(file_path="system_message.txt"):
-    with open(file_path, 'r') as f:
+    with open(file_path, "r") as f:
         return f.read().strip()
+
 
 system_prompt = load_sys_prompt()
 
+
 @tool(response_format="content_and_artifact")
 def retrieve_context(query: str) -> str:
-    """Call this tool ONLY when the user asks specific questions about Jake's 
-    career, skills, experience, or resume. 
-    
+    """Call this tool ONLY when the user asks specific questions about Jake's
+    career, skills, experience, or resume.
+
     DO NOT call this tool for greetings, small talk, or general questions.
     """
 
-    print(f"DEBUG: Tool called with query: {query}") # See this in your terminal
+    print(f"DEBUG: Tool called with query: {query}")  # See this in your terminal
     retrieved_docs = vector_store.similarity_search(query, k=2)
 
     if not retrieved_docs:
         print("DEBUG: No documents found in vector store!")
         return "No relevant documents found.", []
-    
+
     print(f"{len(retrieved_docs)} document(s) found in vector store.")
     print(f"First document: {retrieved_docs[0].page_content[:50]}...")
 
@@ -49,17 +53,18 @@ def retrieve_context(query: str) -> str:
     )
     return serialized, retrieved_docs
 
+
 @cl.on_chat_start
 async def on_chat_start():
 
     try:
-    # download rag data files from private HF dataset
+        # download rag data files from private HF dataset
         snapshot_download(
             repo_id="jakewatson91/sherlock-rag-docs",
             repo_type="dataset",
             local_dir="data/",
             allow_patterns="*.pdf",
-            token=True
+            token=True,
         )
     except Exception as e:
         print(f"Error downloading data: {e}")
@@ -81,20 +86,19 @@ async def on_chat_start():
     vector_store.add_documents(all_splits)
 
     llm = init_chat_model(
-        model="moonshotai/kimi-k2-instruct-0905", 
+        model="moonshotai/kimi-k2-instruct-0905",
         model_provider="groq",
         streaming=True,
-        temperature=0
-        )
-    
+        temperature=0,
+    )
+
     runnable = create_agent(
-        model=llm,
-        tools=[retrieve_context],
-        system_prompt=system_prompt
+        model=llm, tools=[retrieve_context], system_prompt=system_prompt
     )
 
     cl.user_session.set("runnable", runnable)
     cl.user_session.set("memory", [])
+
 
 # Send a response back to the user
 @cl.on_message
@@ -109,20 +113,16 @@ async def on_message(message: cl.Message):
     async for msg, metadata in runnable.astream(
         {"messages": memory},
         stream_mode="messages",
-        config=RunnableConfig(
-            callbacks=[cb],
-            run_name="Sherlock Search")
-            ):
-
+        config=RunnableConfig(callbacks=[cb], run_name="Sherlock Search"),
+    ):
         if (
-            msg.content 
-            and metadata.get("langgraph_node") == "model" 
+            msg.content
+            and metadata.get("langgraph_node") == "model"
             and not getattr(msg, "tool_calls", None)
-            ):
-
+        ):
             print("METADATA: ", metadata)
             print("MESSAGE: ", msg)
-            
+
             await res.stream_token(msg.content)
 
     memory.append({"role": "assistant", "content": res.content})
@@ -130,11 +130,12 @@ async def on_message(message: cl.Message):
 
     await res.send()
 
+
 if __name__ == "__main__":
     snapshot_download(
-    repo_id="jakewatson91/sherlock-rag-docs",
-    repo_type="dataset",
-    local_dir="data/",
-    allow_patterns="*.pdf",
-    token=os.environ.get("HF_TOKEN")
-)
+        repo_id="jakewatson91/sherlock-rag-docs",
+        repo_type="dataset",
+        local_dir="data/",
+        allow_patterns="*.pdf",
+        token=os.environ.get("HF_TOKEN"),
+    )
